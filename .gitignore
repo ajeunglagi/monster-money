@@ -1,0 +1,5 @@
+# Monster Money — keep the .kiro directory tracked (Kiroween requires it).
+# Only ignore OS/editor noise.
+.DS_Store
+Thumbs.db
+*.log

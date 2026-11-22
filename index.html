@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monster Money — Tame Your Money Monsters</title>
+<meta name="description" content="A Halloween budget tracker. Every spending category is a monster with a health bar. Log an expense, feed the monster, keep it alive until the end of the month.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<noscript><p class="noscript">Monster Money needs JavaScript turned on — the monsters only move when the page can think. Please enable JavaScript and reload.</p></noscript>
+
+<div class="ghosts" aria-hidden="true"><span>👻</span><span>👻</span><span>👻</span><span>🎃</span></div>
+
+<header class="hero">
+  <p class="eyebrow">🎃 Kiroween 2026 · Costume Contest 🎃</p>
+  <h1>Monster Money</h1>
+  <p class="tagline">Tame your money monsters — before they eat your whole month.</p>
+  <p class="month-line"><span id="monthLabel">—</span> · <span id="daysLeft">—</span></p>
+</header>
+
+<main>
+  <section class="stats" aria-label="Monthly summary">
+    <div class="stat"><span class="stat-label">Monthly income</span><strong id="statIncome">—</strong></div>
+    <div class="stat"><span class="stat-label">Spent this month</span><strong id="statSpent">—</strong></div>
+    <div class="stat"><span class="stat-label">Still in the crypt</span><strong id="statLeft">—</strong></div>
+    <div class="stat"><span class="stat-label">Projected month-end</span><strong id="statProjected">—</strong></div>
+  </section>
+  <p id="projectionWarning" class="warning" hidden></p>
+
+  <section aria-labelledby="monstersTitle">
+    <h2 id="monstersTitle">Your monsters</h2>
+    <p class="hint">Each monster's health is its budget. Feed it an expense and watch its health drop. Keep them all alive until the end of the month.</p>
+    <div id="monsterGrid" class="monster-grid"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="feedTitle">
+    <h2 id="feedTitle">🍽️ Feed a monster</h2>
+    <form id="expenseForm">
+      <div class="form-row">
+        <label>Amount
+          <input id="expAmount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="25.00" required>
+        </label>
+        <label>Monster
+          <select id="expCategory"></select>
+        </label>
+      </div>
+      <div class="form-row">
+        <label>What was it? (optional)
+          <input id="expNote" type="text" maxlength="80" placeholder="e.g. Midnight pizza">
+        </label>
+        <label>Date
+          <input id="expDate" type="date" required>
+        </label>
+      </div>
+      <p id="formError" class="error" hidden></p>
+      <button type="submit" class="btn-primary">Feed the monster 🍔</button>
+    </form>
+  </section>
+
+  <section class="charts" aria-label="Spending charts">
+    <div class="panel">
+      <h2>Where the money went</h2>
+      <canvas id="donutChart" width="320" height="320" role="img" aria-label="Donut chart of spending by category"></canvas>
+      <div id="donutLegend" class="legend"></div>
+      <p id="donutEmpty" class="hint" hidden>No expenses yet this month — feed a monster to summon the chart.</p>
+    </div>
+    <div class="panel">
+      <h2>Last 14 days of haunting</h2>
+      <canvas id="barChart" width="520" height="260" role="img" aria-label="Bar chart of daily spending for the last 14 days"></canvas>
+      <p id="barEmpty" class="hint" hidden>No spending in the last 14 days. Suspiciously quiet…</p>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="achTitle">
+    <h2 id="achTitle">🏆 Haunted achievements</h2>
+    <div id="achievements" class="achievements"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="recentTitle">
+    <h2 id="recentTitle">Recent feedings</h2>
+    <ul id="expenseList" class="expense-list"></ul>
+    <p id="expenseEmpty" class="hint" hidden>No expenses logged yet. The monsters are getting hungry…</p>
+  </section>
+
+  <section class="panel" aria-labelledby="settingsTitle">
+    <h2 id="settingsTitle">⚙️ Lair settings</h2>
+    <div class="form-row">
+      <label>Monthly income
+        <input id="setIncome" type="number" min="0" step="1" inputmode="decimal">
+      </label>
+      <label>Currency
+        <select id="setCurrency">
+          <option value="USD">USD — US Dollar ($)</option>
+          <option value="IDR">IDR — Indonesian Rupiah (Rp)</option>
+          <option value="EUR">EUR — Euro (€)</option>
+          <option value="GBP">GBP — British Pound (£)</option>
+        </select>
+      </label>
+    </div>
+    <h3>Monster budgets</h3>
+    <div id="budgetInputs" class="budget-inputs"></div>
+    <button id="saveSettings" type="button" class="btn-primary">Save settings</button>
+    <p id="settingsSaved" class="ok" hidden>Settings saved. The monsters approve. 🎃</p>
+  </section>
+
+  <section class="panel" aria-labelledby="dataTitle">
+    <h2 id="dataTitle">📦 Your data stays yours</h2>
+    <p class="hint">Everything lives in this browser only. Nothing is uploaded anywhere. Export a backup, import it later, or start a fresh month.</p>
+    <div class="btn-row">
+      <button id="demoData" type="button" class="btn-ghost">Summon demo data 👻</button>
+      <button id="exportData" type="button" class="btn-ghost">Export backup (JSON)</button>
+      <button id="importData" type="button" class="btn-ghost">Import backup</button>
+      <input id="importFile" type="file" accept="application/json,.json" hidden>
+      <button id="resetMonth" type="button" class="btn-danger">Reset this month</button>
+    </div>
+    <p id="dataMsg" class="ok" hidden></p>
+  </section>
+</main>
+
+<footer>
+  <p>Monster Money · Built for Kiroween 2026 (Costume Contest) with Kiro · No accounts, no tracking, no cost. Your money stays your business.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
